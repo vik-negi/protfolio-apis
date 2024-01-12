@@ -6,6 +6,7 @@ import bcrypt from "bcrypt";
 import User from "../user/user_model.js";
 import md5 from "md5";
 import { withErrorHandling } from "../../util/with_error_handling_calls.js";
+
 const generateOTP = () => {
   const digits = "0123456789";
   let OTP = "";
