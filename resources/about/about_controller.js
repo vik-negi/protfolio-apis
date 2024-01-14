@@ -1,6 +1,6 @@
 import { withErrorHandling } from "../../util/with_error_handling_calls.js";
 import About from "./about_model.js";
-import { ObjectId } from "mongoose";
+import Mongoose from "mongoose";
 
 class AboutController {
   static withErrGetAbout = async (req, res) => {
@@ -28,8 +28,9 @@ class AboutController {
   static withErrUpdateAbout = async (req, res) => {
     const id = req.userId;
     const aboutId = req.params.aboutId;
+    console.log("dtat : ", aboutId, req.body);
     const about = await About.findOneAndUpdate(
-      new ObjectId(aboutId),
+      new Mongoose.Types.ObjectId(aboutId),
       req.body,
       {
         new: true,

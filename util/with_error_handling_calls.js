@@ -14,6 +14,7 @@ export const withErrorHandling = (handler, reqData, reqParams) => {
     try {
       return await handler(req, res);
     } catch (error) {
+      console.log("error catch ", error);
       return res.status(500).json({
         message: error.message,
       });

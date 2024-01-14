@@ -6,7 +6,6 @@ class ProjectController {
   static withoutErrGetProjects = async (req, res) => {
     const username = req.params.username;
 
-    console.log("username : ", username);
     const projectId = req.query.projectId;
     const filter = {
       username: username,
@@ -15,7 +14,6 @@ class ProjectController {
       filter._id = projectId;
     }
     const projects = await Project.find(filter).sort({ order: 1 });
-    console.log(projects);
     res.status(200).json({
       data: projects,
     });
@@ -28,15 +26,23 @@ class ProjectController {
       user: id,
       username: req.user.username,
     };
-    if (req.files) {
-      const files = req.files;
-      const image = [];
-      for (const file of files) {
-        const result = cloudinaryConfig(file.tempFilePath, "image");
-        image.push({ url, id });
+    var images = [];
+
+    for (const key in req.files) {
+      if (Object.hasOwnProperty.call(req.files, key)) {
+        try {
+          const result = await cloudinaryConfig(
+            req.files[key].tempFilePath,
+            "image"
+          );
+          images.push(result.url);
+        } catch (error) {
+          console.error("Error uploading image:", error);
+        }
       }
-      data.image = image;
     }
+
+    data.image = images;
 
     const project = await Project.create(data);
     res.status(200).json({
@@ -59,6 +65,7 @@ class ProjectController {
 
   static withoutErrDeleteProject = async (req, res) => {
     const projectId = req.params.projectId;
+    console.log("projectId", projectId);
     const project = await Project.findOneAndDelete({ _id: projectId });
     res.status(200).json({
       data: project,
