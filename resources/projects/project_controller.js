@@ -43,6 +43,8 @@ class ProjectController {
     }
 
     data.image = images;
+    data.tags = data.tags.split(",");
+    data.skillsUsed = data.skillsUsed.split(",");
 
     const project = await Project.create(data);
     res.status(200).json({

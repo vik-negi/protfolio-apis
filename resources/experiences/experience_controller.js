@@ -5,6 +5,10 @@ class ExcersiceController {
   static withErrGetExperience = async (req, res) => {
     const username = req.params.username;
     const about = await Experience.findOne({ username: username });
+    about.experiences.sort((a, b) => {
+      return new Date(b.from) - new Date(a.from);
+    });
+
     res.status(200).json({
       data: about,
     });
@@ -19,8 +23,21 @@ class ExcersiceController {
       username: req.user.username,
     };
     console.log("experience data : ", data);
+    const exp = Experience.findOne({ username: req.user.username });
+    if (exp) {
+      const experience = await Experience.findOneAndUpdate(
+        { username: req.user.username },
+        { $push: { experiences: req.body.experiences } },
+        {
+          new: true,
+        }
+      );
+      return res.status(200).json({
+        data: experience,
+      });
+    }
     const about = await Experience.create(data);
-    res.status(200).json({
+    return res.status(200).json({
       data: about,
     });
   };
