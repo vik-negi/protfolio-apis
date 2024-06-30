@@ -4,13 +4,14 @@ import Experience from "./experiences_model.js";
 class ExcersiceController {
   static withErrGetExperience = async (req, res) => {
     const username = req.params.username;
-    const about = await Experience.findOne({ username: username });
-    about.experiences.sort((a, b) => {
+    const experience = await Experience.findOne({ username: username });
+
+    experience?.experiences.sort((a, b) => {
       return new Date(b.from) - new Date(a.from);
     });
 
     res.status(200).json({
-      data: about,
+      data: experience,
     });
   };
 

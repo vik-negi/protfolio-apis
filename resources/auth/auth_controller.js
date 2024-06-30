@@ -6,6 +6,7 @@ import bcrypt from "bcrypt";
 import User from "../user/user_model.js";
 import md5 from "md5";
 import { withErrorHandling } from "../../util/with_error_handling_calls.js";
+import PublicInfo from "../user/public_info_model.js";
 
 const generateOTP = () => {
   const digits = "0123456789";
@@ -86,14 +87,21 @@ class AuthController {
           delete: true,
         };
       }
-      userData["username"] =  Utils.generateUniqueUserName(
-        userData.firstName,
-        userData.lastName
+      userData["username"] = Utils.generateUniqueUserName(
+        userData.firstName.toLowerCase(),
+        userData.lastName.toLowerCase()
       );
 
       const hash = await bcrypt.hash(userData.password, 8);
       userData.password = hash;
       const user = await Model.create(userData);
+
+      const publicInfo = {
+        user: user._id,
+        username: user.username,
+      };
+
+      await PublicInfo.create(publicInfo);
 
       // const emailTemplate=await Email.findOne({"title":"When a new user registers"})
       // EmailService(user,emailTemplate.content,emailTemplate.subject)
