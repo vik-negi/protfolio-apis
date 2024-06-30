@@ -34,9 +34,11 @@ const UserSchema = new Schema(
     },
     profilePic: {
       type: String,
-      default: function () {
-        return `https://www.gravatar.com/avatar/${md5(this.email)}?d=identicon`;
-      },
+      default:
+        "https://res.cloudinary.com/drngfg58j/image/upload/v1680951338/media/portfolio/about_main_vpa9ed.png",
+      // default: function () {
+      //   return `https://www.gravatar.com/avatar/${md5(this.email)}?d=identicon`;
+      // },
     },
     isVerified: {
       type: Boolean,
