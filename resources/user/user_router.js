@@ -18,11 +18,9 @@ router
 router.route("/forgot-password").post(AuthController.forgotPassOtp);
 router.route("/verify-otp").post(AuthController.verifyOtp);
 router.route("/reset-password").post(AuthController.changePasswordOtp);
+router.route("/:username").get(UserController.fetchUser);
 router
   .route("/")
-  .post(AuthServices.userAuthentication, UserController.fetchUser);
-router
-  .route("/role/:userId")
   .put(AuthServices.userAuthentication, UserController.updateUser);
 
 export default router;

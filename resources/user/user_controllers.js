@@ -4,42 +4,16 @@ import { sendOTPEmail } from "../../util/sendBlue.js";
 import bcrypt from "bcrypt";
 import { withErrorHandling } from "../../util/with_error_handling_calls.js";
 import PublicInfo from "./public_info_model.js";
+import { cloudinaryConfig } from "../../util/cloudinary.js";
 
 class UserController {
   // update user
-  static async withoutErrupdateUser(req, res) {
-    try {
-      const { userId } = req.params;
-      const user = await User.findOneAndUpdate({ _id: userId }, req.body, {
-        new: true,
-      });
-      if (!user) {
-        return res.status(404).json({
-          status: "failed",
-          message: "User not found",
-        });
-      }
-
-      await user.save();
-      return res.status(200).json({
-        status: "success",
-        message: "User updated successfully",
-        data: user,
-      });
-    } catch (err) {
-      console.log(err);
-      return res.status(500).json({
-        status: "failed",
-        message: "Server Error",
-      });
-    }
-  }
 
   static async withoutErrfetchUser(req, res) {
     try {
-      const { userId, email } = req.body;
+      const { username } = req.params;
       const user = await User.findOne({
-        $or: [{ _id: userId }, { email: email }],
+        username: username,
       });
       if (!user) {
         return res.status(404).json({
@@ -51,6 +25,46 @@ class UserController {
       return res.status(200).json({
         status: "success",
         message: "User found",
+        data: user,
+      });
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({
+        status: "failed",
+        message: "Server Error",
+        error: err.message,
+      });
+    }
+  }
+
+  static async withoutErrUpdateUser(req, res) {
+    try {
+      const user = await User.findOne(req.user._id);
+      if (!user) {
+        return res.status(404).json({
+          status: "failed",
+          message: "User not found",
+        });
+      }
+      if (req.files && req.files.image) {
+        const result = await cloudinaryConfig(
+          req.files.image.tempFilePath,
+          "image"
+        );
+
+        if (result) {
+          await User.findOneAndUpdate(
+            { _id: req.user._id },
+            { profilePic: result.url, ...req.body },
+            { new: true }
+          );
+          await user.save();
+        }
+      }
+
+      return res.status(200).json({
+        status: "success",
+        message: "User updated successfully",
         data: user,
       });
     } catch (err) {
@@ -206,7 +220,7 @@ class UserController {
   static createUser = withErrorHandling(
     UserController.withoutErrcreateUserByAdmin
   );
-  static updateUser = withErrorHandling(UserController.withoutErrupdateUser);
+  static updateUser = withErrorHandling(UserController.withoutErrUpdateUser);
   static fetchUser = withErrorHandling(UserController.withoutErrfetchUser);
   static fetchPublicInfo = withErrorHandling(
     UserController.withoutErrfetchPublicInfo

@@ -1,23 +1,28 @@
 import mongoose from "mongoose";
-import { Schema, SchemaType, model } from "mongoose";
+const { Schema, SchemaTypes, model } = mongoose;
 
 const SkillSchema = new Schema(
   {
-    name: {
+    username: {
       type: String,
       required: true,
+    },
+    user: {
+      type: SchemaTypes.ObjectId,
+      ref: "user",
+    },
+    skillCategory: {
       trim: true,
-      unique: true,
-    },
-    description: {
+      default: "Others",
       type: String,
     },
-    image: {
-      type: String,
+    skill: {
+      type: SchemaTypes.ObjectId,
+      ref: "allskill",
     },
     level: {
       type: String,
-      enum: ["Beginner", "Intermediate", "Advanced"],
+      enum: ["Beginner", "Intermediate", "Advanced", "Expert"],
       default: "Beginner",
     },
     isActive: {
@@ -29,3 +34,6 @@ const SkillSchema = new Schema(
     timestamps: true,
   }
 );
+
+const Skill = model("skill", SkillSchema);
+export default Skill;

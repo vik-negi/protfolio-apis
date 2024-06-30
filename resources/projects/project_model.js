@@ -18,6 +18,9 @@ const projectSchema = new Schema(
       type: String,
       trim: true,
     },
+    projectDoc: {
+      type: String,
+    },
     username: {
       type: String,
       required: true,

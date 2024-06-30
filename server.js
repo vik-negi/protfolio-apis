@@ -14,6 +14,7 @@ import authRouter from "./resources/auth/auth_routor.js";
 import projectRouter from "./resources/projects/project_router.js";
 import aboutRouter from "./resources/about/about_router.js";
 import experienceRouter from "./resources/experiences/experiences_router.js";
+import skillRouter from "./resources/skills/skills_router.js";
 import fs from "fs";
 
 config();
@@ -51,6 +52,7 @@ app.use("/api/user/public-info", userModel, userRouter);
 app.use("/api/projects", projectRouter);
 app.use("/api/about", aboutRouter);
 app.use("/api/experience", experienceRouter);
+app.use("/api/skills", skillRouter);
 
 app.get("/", (req, res) => {
   res.json("Server is Running ");

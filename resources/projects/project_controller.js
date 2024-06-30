@@ -53,7 +53,7 @@ class ProjectController {
   };
 
   static withoutErrUpdateProject = async (req, res) => {
-    const id = req.userId;
+    const id = req.user._id;
     const projectId = req.params.projectId;
     const project = await Project.findOneAndUpdate(
       { _id: projectId, user: id },
