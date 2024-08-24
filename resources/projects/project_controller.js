@@ -21,7 +21,7 @@ class ProjectController {
 
   static withoutErrCreateProject = async (req, res) => {
     const id = req.user._id;
-    const data = {
+    var data = {
       ...req.body,
       user: id,
       username: req.user.username,
@@ -42,9 +42,17 @@ class ProjectController {
       }
     }
 
+    console.log("data", req.body);
+
     data.image = images;
     data.tags = data.tags.split(",");
     data.skillsUsed = data.skillsUsed.split(",");
+    if (data.level == null || data.level == "null") {
+      data.level = "Beginner";
+    }
+    if (data.order == null || data.order == "null") {
+      data.order = 0;
+    }
 
     const project = await Project.create(data);
     res.status(200).json({
