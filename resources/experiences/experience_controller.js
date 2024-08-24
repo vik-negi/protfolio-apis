@@ -4,43 +4,40 @@ import Experience from "./experiences_model.js";
 class ExcersiceController {
   static withErrGetExperience = async (req, res) => {
     const username = req.params.username;
-    const experience = await Experience.findOne({ username: username });
+    const experiences = await Experience.find({ username: username });
 
-    experience?.experiences.sort((a, b) => {
+    experiences.sort((a, b) => {
       return new Date(b.from) - new Date(a.from);
     });
 
     res.status(200).json({
-      data: experience,
+      data: experiences,
     });
   };
 
   static withErrCreateExperience = async (req, res) => {
     const id = req.user._id;
-    console.log("experience : ", req.body.experiences);
+    var inputdata = req.body;
+    if (typeof inputdata === "string") {
+      inputdata = JSON.parse(data);
+    }
     const data = {
-      experiences: req.body.experiences,
+      ...inputdata,
       user: id,
       username: req.user.username,
     };
-    console.log("experience data : ", data);
-    const exp = Experience.findOne({ username: req.user.username });
-    if (exp) {
-      const experience = await Experience.findOneAndUpdate(
-        { username: req.user.username },
-        { $push: { experiences: req.body.experiences } },
-        {
-          new: true,
-        }
-      );
+
+    try {
+      const about = await Experience.create(data);
       return res.status(200).json({
-        data: experience,
+        data: about,
+      });
+    } catch (err) {
+      console.log("error : ", err);
+      return res.status(400).json({
+        message: "Failed to create experience",
       });
     }
-    const about = await Experience.create(data);
-    return res.status(200).json({
-      data: about,
-    });
   };
 
   static withErrUpdateExperience = async (req, res) => {

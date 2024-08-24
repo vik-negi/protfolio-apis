@@ -11,45 +11,38 @@ const experienceSchema = new Schema(
     username: {
       type: String,
       required: true,
-      unique: true,
     },
-    experiences: {
-      type: [
-        {
-          title: {
-            type: String,
-            required: true,
-          },
-          company: {
-            type: String,
-            required: true,
-          },
-          location: {
-            type: String,
-          },
-          from: {
-            type: Date,
-            required: true,
-          },
-          to: {
-            type: Date,
-          },
-          current: {
-            type: Boolean,
-            default: false,
-          },
-          description: {
-            type: String,
-          },
-          skills: {
-            type: [String],
-          },
-          highlights: {
-            type: [String],
-          },
-        },
-      ],
-      default: [],
+
+    title: {
+      type: String,
+      required: true,
+    },
+    company: {
+      type: String,
+      required: true,
+    },
+    location: {
+      type: String,
+    },
+    from: {
+      type: Date,
+      required: true,
+    },
+    to: {
+      type: Date,
+    },
+    current: {
+      type: Boolean,
+      default: false,
+    },
+    description: {
+      type: String,
+    },
+    skills: {
+      type: [String],
+    },
+    highlights: {
+      type: [String],
     },
   },
   {
