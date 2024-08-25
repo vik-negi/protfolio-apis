@@ -5,7 +5,7 @@ import Mongoose from "mongoose";
 class AboutController {
   static withErrGetAbout = async (req, res) => {
     const username = req.params.username;
-    const about = await About.findOne({ username: username });
+    const about = await About.findOne({ username: username }).populate("user");
     res.status(200).json({
       data: about,
     });
@@ -18,7 +18,7 @@ class AboutController {
       user: id,
       username: req.user.username,
     };
-    console.log("about data : ", data);
+
     const about = await About.create(data);
     res.status(200).json({
       data: about,
@@ -28,7 +28,6 @@ class AboutController {
   static withErrUpdateAbout = async (req, res) => {
     const id = req.userId;
     const aboutId = req.params.aboutId;
-    console.log("dtat : ", aboutId, req.body);
     const about = await About.findOneAndUpdate(
       new Mongoose.Types.ObjectId(aboutId),
       req.body,

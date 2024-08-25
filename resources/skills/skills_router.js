@@ -7,6 +7,7 @@ const router = Router();
 // router.route("/:username").get(SkillController.);
 
 router.route("/").get(SkillController.getAllSkills);
+router.route("/:username").get(SkillController.userSkills);
 router
   .route("/")
   .post(AuthServices.userAuthentication, SkillController.addSkill);
