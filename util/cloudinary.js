@@ -2,9 +2,9 @@ import { config, uploader } from "cloudinary";
 var dataurl;
 const cloudinaryConfig = async (locaFilePath, type) => {
   config({
-    cloud_name: "dolqf9s3y",
-    api_key: "946358445313778",
-    api_secret: "vic0vSFgD7_Z7-viUc49VzfHN30",
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
   });
   try {
     console.log("type", type);
@@ -12,7 +12,7 @@ const cloudinaryConfig = async (locaFilePath, type) => {
       return uploader
         .upload(locaFilePath, {
           resource_type: "image",
-          folder: "myfolder/neonflake/gym",
+          folder: "portfolio",
         })
         .then((result) => {
           const image = result;
@@ -31,7 +31,7 @@ const cloudinaryConfig = async (locaFilePath, type) => {
       //   uploader
       //     .upload(locaFilePath, {
       //       resource_type: "auto",
-      //       folder: "myfolder/neonflake/gym",
+      //       folder: "portfolio",
       //       // chunk_size: 6000000,
       //       eager: [
       //         { width: 300, height: 300, crop: "pad", audio_codec: "none" },
@@ -65,9 +65,4 @@ const cloudinaryConfig = async (locaFilePath, type) => {
 export { dataurl, cloudinaryConfig };
 
 // import cloudinary from "cloudinary";
-// cloudinary.v2.config({
-//   cloud_name: "dolqf9s3y",
-//   api_key: "946358445313778",
-//   api_secret: "vic0vSFgD7_Z7-viUc49VzfHN30",
-// });
 // export default cloudinary;

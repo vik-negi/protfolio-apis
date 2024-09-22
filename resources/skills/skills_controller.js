@@ -61,6 +61,12 @@ class SkillController {
   static withoutErrAddUserSkill = async (req, res) => {
     const id = req.user._id;
     var reqdata = req.body;
+    if (!reqdata.skill) {
+      const skill = await AllSkill.create({
+        name: reqdata.name,
+      });
+      reqdata.skill = skill._id;
+    }
     if (
       !["Beginner", "Intermediate", "Advanced", "Expert"].includes(
         reqdata.level
@@ -68,13 +74,23 @@ class SkillController {
     ) {
       reqdata.level = "Intermediate";
     }
-    const data = {
-      ...reqdata,
-      user: id,
-      username: req.user.username,
-    };
 
-    const skill = await Skill.create(data);
+    const skill = await Skill.findOneAndUpdate(
+      {
+        user: id,
+        skill: reqdata.skill,
+      },
+      {
+        $set: {
+          level: reqdata.level,
+          username: req.user.username,
+          skillCategory: reqdata.skillCategory,
+        },
+        $setOnInsert: { user: id },
+      },
+      { new: true, upsert: true }
+    );
+
     res.status(200).json({
       data: skill,
     });
